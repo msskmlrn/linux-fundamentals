@@ -1,0 +1,210 @@
+The three most important files
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ ls /foObarR 2> ~/Development/git/yliopisto/linux-fundamentals/week2/ls-unsuccessful.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ cat ls-unsuccessful.txt 
+ls: cannot access /foObarR: No such file or directory
+
+
+Two at once!
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ ls /foObarR week1/ 2> week2/ls-unsuccessful2.txt > week2/ls-successful2.txt 
+
+
+Hey, what about stdin?
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ wc -l
+as
+asf
+afs
+awf
+4
+
+cat Concatenate FILE(s), or standard input, to standard output.
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat
+asf
+asf
+asd
+asd
+wad
+wad
+fe
+fe
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat -n
+ad
+     1	ad
+fa
+     2	fa
+fw
+     3	fw
+asf
+     4	asf
+
+
+Useless use of cat
+
+
+Pipelines
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ ls ~ | wc -l > week2/ls-pipeline-wc-l.txt
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ /bin/ls ~ | wc -l > week2/bin-ls-pipeline-wc-l.txt
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat week2/bin-ls-pipeline-wc-l.txt 
+19
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat week2/ls-pipeline-wc-l.txt 
+19
+
+
+Filters
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ ls ~ | grep 'e' | wc -l > week2/filters.txt
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat week2/filters.txt 
+13
+
+
+Interlude: bash
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ cat week2/count-homedir.sh 
+#!/bin/bash
+ls ~ | wc -l
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ ./week2/count-homedir.sh 
+19
+
+
+Some assembly required
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals$ cat week2/ls-recursive-Nov-2011.sh 
+#!/bin/bash
+ls -R ~tkt_cam/public_html/2011/11/
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals$ ./week2/ls-recursive-Nov-2011.sh > week2/ls-recursive-Nov-2011-result.txt
+
+
+Just the pics, ma'am
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals$ cat week2/ls-recursive-Nov-2011-jpg.sh 
+#!/bin/bash
+./ls-recursive-Nov-2011.sh | grep "\.jpg$"
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./ls-recursive-Nov-2011-jpg.sh > ls-recursive-Nov-2011-jpg-result.txt
+
+
+Umm, how much is that?
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ cat ls-recursive-Nov-2011-jpg-wc.sh 
+#!/bin/bash
+./ls-recursive-Nov-2011-jpg.sh | wc -l
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./ls-recursive-Nov-2011-jpg-wc.sh > ls-recursive-Nov-2011-jpg-wc-result.txt
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./ls-recursive-Nov-2011-jpg-wc.sh 
+720
+
+
+Remember the backticks
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ date
+Wed Oct 30 14:34:26 EET 2013
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ cat ls-recursive-month-2011-jpg-wc.sh 
+#!/bin/bash
+ls -R ~tkt_cam/public_html/2011/$(date +%m)/ | grep "\.jpg$" | wc -l
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./ls-recursive-month-2011-jpg-wc.sh 
+743
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./ls-recursive-month-2011-jpg-wc.sh > ls-recursive-month-2011-jpg-wc-result.txt
+
+
+The big brother of ls
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ find ~/Desktop -type f
+/home/mssiren/Desktop/testi.txt~
+/home/mssiren/Desktop/temp.txt~
+/home/mssiren/Desktop/history dates.txt~
+/home/mssiren/Desktop/1382366008577.stacktrace
+/home/mssiren/Desktop/reduce.txt
+/home/mssiren/Desktop/info2.txt~
+/home/mssiren/Desktop/info.txt~
+/home/mssiren/Desktop/Screenshot_2013-10-03-11-50-49.png
+/home/mssiren/Desktop/netbeans-7.3.1.desktop
+/home/mssiren/Desktop/temp.txt
+/home/mssiren/Desktop/history dates.txt
+/home/mssiren/Desktop/Screenshot_2013-10-03-11-50-58.png
+
+
+Everybody together now!
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ cat find-count-months-images.sh 
+#!/bin/bash
+find ~tkt_cam/public_html/$(date +%Y)/$(date +%m) | grep "\.jpg$" | wc -l
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./find-count-months-images.sh 
+711
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week2$ ./find-count-months-images.sh > find-count-months-images-result.txt
+
+
+Gregory and Julian
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ date
+Wed Oct 30 14:39:22 EET 2013
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ date --date "last Thursday last week"
+Thu Oct 17 00:00:00 EEST 2013
+
+
+Intro to variables
+Shell Variables
+       The following variables are set by the shell:
+
+BASH   Expands  to  the  full file name used to invoke this instance of
+              bash.
+
+BASH_VERSION
+              Expands  to  a string describing the version of this instance of
+              bash.
+
+PWD    The current working directory as set by the cd command.
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ echo $BASH
+/bin/bash
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ echo $BASH_VERSION
+4.2.45(1)-release
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ echo $PWD
+/home/mssiren/Development/git/yliopisto/linux-fundamentals
+
+
+Special shell variables
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ cat echo.sh 
+#!/bin/bash
+echo $*
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ ./echo.sh It was a dark and stormy night..
+It was a dark and stormy night..
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ ./echo.sh I see a lot of files: `ls`
+I see a lot of files: bin-ls-pipeline-wc-l.txt count-homedir.sh echo.sh filters.txt ls-pipeline-wc-l.txt ls-successful2.txt ls-unsuccessful2.txt ls-unsuccessful.txt raportti.txt raportti.txt~ remote-invocation.sh variable-visibility.sh
+
+
+The difference between bash and bash
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ cat variable-visibility.sh 
+#!/bin/bash
+foo="bar"
+echo "Within first shell (pid $BASHPID): \$foo=$foo"
+/bin/bash -c "echo \"Within second shell (pid \$BASHPID): \\\$foo=\$foo\""
+
+-c string If the -c option is present,  then  commands  are  read  from
+                 string.   If  there  are arguments after the string, they are
+                 assigned to the positional parameters, starting with $0.
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ ./variable-visibility.sh 
+Within first shell (pid 19525): $foo=bar
+Within second shell (pid 19526): $foo=
+
+
+Rare exports
+
+
+Remote invocation
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ cat remote-invocation.sh 
+#!/bin/bash
+foo=$(ssh $1 $2)
+echo $foo
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week2$ ./remote-invocation.sh ukko192.hpc.cs.helsinki.fi "uptime"
+14:45:22 up 166 days, 23:02, 3 users, load average: 18.02, 18.05, 18.05

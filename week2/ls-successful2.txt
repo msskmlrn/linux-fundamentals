@@ -1,0 +1,9 @@
+week1/:
+2_Sunday.2011.10.30
+find.txt
+hostname.txt
+list-home-directory-improved.txt
+list-home-directory.txt
+raportti.txt
+rsync-todays-Exactum-cam.sh
+Sunday.2011.10.30
