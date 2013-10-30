@@ -1,5 +1,5 @@
 Directory setup
-mssiren@melkki:~$ find git/yliopisto/linux-fundamentals/ > git/yliopisto/linux-fundamentals/week1/find.txt
+mssiren@laptop-e42-3:~$ find /home/mssiren/Development/git/yliopisto/linux-fundamentals/ > ~/Development/git/yliopisto/linux-fundamentals/week1/find.txt
 
 
 Output redirection
@@ -327,3 +327,61 @@ melkki
 mssiren@laptop-e42-3:~$ ssh ukko192.hpc.cs.helsinki.fi cat test/hostname.txt
 melkki
 
+
+Enter rsync
+tyhjä directory
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week1$ rsync --archive ~tkt_cam/public_html/2011/10/30/  ~/Development/git/yliopisto/linux-fundamentals/week1/Sunday.2011.10.30 --stats
+
+Number of files: 25
+Number of files transferred: 24
+Total file size: 11179311 bytes
+Total transferred file size: 11179311 bytes
+Literal data: 11179311 bytes
+Matched data: 0 bytes
+File list size: 467
+File list generation time: 0.010 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 11182146
+Total bytes received: 471
+
+sent 11182146 bytes  received 471 bytes  22365234.00 bytes/sec
+total size is 11179311  speedup is 1.00
+
+cp ensin, sitten rsync
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week1$ cp --archive ~tkt_cam/public_html/2011/10/30 ~/Development/git/yliopisto/linux-fundamentals/week1/2_Sunday.2011.10.30
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week1$ rsync --archive ~tkt_cam/public_html/2011/10/30/  ~/Development/git/yliopisto/linux-fundamentals/week1/2_Sunday.2011.10.30 --stats
+
+Number of files: 25
+Number of files transferred: 0
+Total file size: 11179311 bytes
+Total transferred file size: 0 bytes
+Literal data: 0 bytes
+Matched data: 0 bytes
+File list size: 467
+File list generation time: 0.004 seconds
+File list transfer time: 0.000 seconds
+Total bytes sent: 476
+Total bytes received: 12
+
+sent 476 bytes  received 12 bytes  976.00 bytes/sec
+total size is 11179311  speedup is 22908.42
+
+
+Time and date
+%d     day of month (e.g., 01)
+%m     month (01..12)
+%Y     year
+%A     locale's full weekday name (e.g., Sunday)
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ date +%A.%Y.%m.%d
+Wednesday.2013.10.30
+
+
+Inserting date
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week1$ ./rsync-todays-Exactum-cam.sh 
+rsync --archive ~tkt_cam/public_html/2013/10/30/ ~/Development/git/yliopisto/linux-fundamentals/week1/Wednesday:2013:10:30/ --stats
+
+mssiren@ukko192:~/Development/git/yliopisto/linux-fundamentals/week1$ cat rsync-todays-Exactum-cam.sh 
+#!/bin/bash
+echo "rsync --archive ~tkt_cam/public_html/`date +%Y`/`date +%m`/`date +%d`/ ~/Development/git/yliopisto/linux-fundamentals/week1/`date +%A:%Y:%m:%d`/ --stats"
