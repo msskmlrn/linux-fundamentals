@@ -1,0 +1,24 @@
+Filesystem              Size  Used Avail Use% Mounted on
+/dev/sda3                58G   37G   19G  67% /
+none                    4.0K     0  4.0K   0% /sys/fs/cgroup
+udev                    2.5G  4.0K  2.5G   1% /dev
+tmpfs                   501M  928K  500M   1% /run
+none                    5.0M     0  5.0M   0% /run/lock
+none                    2.5G  2.3M  2.5G   1% /run/shm
+none                    100M   32K  100M   1% /run/user
+/home/mssiren/.Private   58G   37G   19G  67% /home/mssiren
+/dev/sda3 on / type ext4 (rw,errors=remount-ro)
+proc on /proc type proc (rw,noexec,nosuid,nodev)
+sysfs on /sys type sysfs (rw,noexec,nosuid,nodev)
+none on /sys/fs/cgroup type tmpfs (rw)
+none on /sys/fs/fuse/connections type fusectl (rw)
+none on /sys/kernel/debug type debugfs (rw)
+none on /sys/kernel/security type securityfs (rw)
+udev on /dev type devtmpfs (rw,mode=0755)
+devpts on /dev/pts type devpts (rw,noexec,nosuid,gid=5,mode=0620)
+tmpfs on /run type tmpfs (rw,noexec,nosuid,size=10%,mode=0755)
+none on /run/lock type tmpfs (rw,noexec,nosuid,nodev,size=5242880)
+none on /run/shm type tmpfs (rw,nosuid,nodev)
+none on /run/user type tmpfs (rw,noexec,nosuid,nodev,size=104857600,mode=0755)
+/home/mssiren/.Private on /home/mssiren type ecryptfs (ecryptfs_check_dev_ruid,ecryptfs_cipher=aes,ecryptfs_key_bytes=16,ecryptfs_unlink_sigs,ecryptfs_sig=c5d3ef0dc42b62ec,ecryptfs_fnek_sig=b1366f42bf01dd18)
+gvfsd-fuse on /run/user/mssiren/gvfs type fuse.gvfsd-fuse (rw,nosuid,nodev,user=mssiren)

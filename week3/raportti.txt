@@ -1,0 +1,133 @@
+Themes
+
+
+Not glue but tar
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar cf scripts-tarball.tar ~/Development/git/yliopisto/linux-fundamentals/week1/*.sh ~/Development/git/yliopisto/linux-fundamentals/week2/*.sh
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar cjf scripts-bzip2.tar.bz2 ~/Development/git/yliopisto/linux-fundamentals/week1/*.sh ~/Development/git/yliopisto/linux-fundamentals/week2/*.sh
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar czf scripts-gzip.tar.gz ~/Development/git/yliopisto/linux-fundamentals/week1/*.sh ~/Development/git/yliopisto/linux-fundamentals/week2/*.sh
+
+
+with pipe
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar c ~/Development/git/yliopisto/linux-fundamentals/week1/*.sh ~/Development/git/yliopisto/linux-fundamentals/week2/*.sh | gzip > scripts-gzip-with-pipe.tar.gz
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar c ~/Development/git/yliopisto/linux-fundamentals/week1/*.sh ~/Development/git/yliopisto/linux-fundamentals/week2/*.sh | bzip2 > scripts-bzip2-with-pipe.tar.bz2
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar -cf - scripts-tarball.tar | wc -c > scripts-archive-sizes.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar -cjf - scripts-bzip2.tar.bz2 | wc -c >> scripts-archive-sizes.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar -cjf - scripts-bzip2-with-pipe.tar.bz2 | wc -c >> scripts-archive-sizes.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar -czf - scripts-gzip.tar.gz | wc -c >> scripts-archive-sizes.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ tar -czf - scripts-gzip-with-pipe.tar.gz | wc -c >> scripts-archive-sizes.txt
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat scripts-archive-sizes.txt
+30720
+1205
+1228
+946
+957
+
+
+Local and network file systems
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ df -h > ~/Development/git/yliopisto/linux-fundamentals/week3/mount.txt
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals$ mount >> ~/Development/git/yliopisto/linux-fundamentals/week3/mount.txt
+
+nfs(4)-tyyppiset filesysteemit eivät ole paikallisia.
+
+Käytän pääasiassa kannettavan tietokoneen levyä, tarkemmin: /dev/sda3 on / type ext4 (rw,errors=remount-ro)
+Käytän myös ukon nodea 192 ja /tmp directorya (tmpfs)
+
+
+Fetch and extract
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ curl 'https://wiki.helsinki.fi/download/attachments/94589432/lost24-monitor-temps-and-fans.tar.bz2?version=1&modificationDate=1352366321231&api=v2' | tar xj
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 1871k  100 1871k    0     0   4837      0  0:06:36  0:06:36 --:--:--  6891
+
+
+No more disk space 
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/distributed$ ./distributed-decompress.sh
+
+real	9m12.253s
+user	0m0.048s
+sys	0m0.016s
+ 
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/distributed$ ./distributed-decompress.sh
+
+real	8m47.271s
+user	0m16.608s
+sys	1m2.724s
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/distributed$ ./distributed-decompress.sh
+
+real	13m48.216s
+user	0m14.980s
+sys	0m56.904s
+
+
+Local
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/local$ ./local-download-decompress.sh 
+
+real	7m46.455s
+user	0m17.900s
+sys	0m52.824s
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/local$ ./local-download-decompress.sh 
+
+real	8m47.012s
+user	0m17.812s
+sys	0m53.796s
+
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/local$ ./local-download-decompress.sh 
+
+real	5m18.426s
+user	0m15.320s
+sys	0m52.688s
+
+Ukko-operaatiolla kestää pidempään. Bzip2 hoitaa purun nopeasti, mutta tiedon siirtäminen verkon yli kotikoneelle on hidasta.
+
+Kotikoneella operaatio on nopeampi, sillä puretun paketin tietoja ei tarvitse siirtä verkon yli.
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat distributed-decompress.sh
+#!/bin/bash
+time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && bzcat lost24-monitor-temps-and-fans.tar.bz2" | tar x
+
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat ukko-download-decompress.sh
+#!/bin/bash
+time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && curl 'https://wiki.helsinki.fi/download/attachments/94589432/lost24-monitor-temps-and-fans.tar.bz2?version=1&modificationDate=1352366321231&api=v2' \ | bzcat" | tar x
+
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat local-download-decompress.sh
+#!/bin/bash
+time tar xjf lost24-monitor-temps-and-fans.tar.bz2 
+
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat ukko-download-decompress.sh 
+#!/bin/bash
+
+
+The monitor data set
+
+
+grep and cut
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat collect-unique-PROCESSOR_ZONE-temps.sh 
+#!/bin/bash
+
+for file in `find . | grep "2011.10.11.*hp-temps\.txt$"`
+do
+	grep "PROCESSOR_ZONE" $file | cut -c32-34
+done | sort | uniq
+
+mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ ~/Development/git/yliopisto/linux-fundamentals/week3/collect-unique-PROCESSOR_ZONE-temps.sh 
+20C
+21C
+22C
+23C
+24C
+25C
+26C
+27C
+28C
