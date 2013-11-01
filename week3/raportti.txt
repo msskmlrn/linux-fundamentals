@@ -133,3 +133,43 @@ mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ ~/Development/git/yliopisto/lin
 32C
 
 
+Don't run with scissors
+
+-e script
+s/regexp/replacement/
+              Attempt to match regexp against the pattern space.  If  success‐
+              ful,   replace  that  portion  matched  with  replacement.   The
+              replacement may contain the special character & to refer to that
+              portion  of  the  pattern  space  which matched, and the special
+              escapes \1 through \9 to refer  to  the  corresponding  matching
+              sub-expressions in the regexp.
+              
+g G    Copy/append hold space to pattern space. 
+    
+-i[SUFFIX], --in-place[=SUFFIX]
+              edit files in place (makes backup if extension supplied)
+
+
+sed -i -e 's: \+:,:g' -e 's:/:,:g' file.txt
+
+mssiren@laptop-e42-3:~/Downloads/test/monitor/2012.10.11/00:00$ cat hp-temps-test.txt 
+
+Sensor   Location              Temp       Threshold
+------   --------              ----       ---------
+#1        PROCESSOR_ZONE       29C/84F    62C/143F 
+#2        CPU#1                38C/100F   73C/163F 
+#3        I/O_ZONE             38C/100F   68C/154F 
+#4        CPU#2                29C/84F    73C/163F 
+#5        POWER_SUPPLY_BAY     22C/71F    55C/131F 
+
+mssiren@laptop-e42-3:~/Downloads/test/monitor/2012.10.11/00:00$ sed -i -e 's: \+:,:g' -e 's:/:,:g' hp-temps-test.txt 
+mssiren@laptop-e42-3:~/Downloads/test/monitor/2012.10.11/00:00$ cat hp-temps-test.txt 
+
+Sensor,Location,Temp,Threshold
+------,--------,----,---------
+#1,PROCESSOR_ZONE,29C,84F,62C,143F,
+#2,CPU#1,38C,100F,73C,163F,
+#3,I,O_ZONE,38C,100F,68C,154F,
+#4,CPU#2,29C,84F,73C,163F,
+#5,POWER_SUPPLY_BAY,22C,71F,55C,131F,
+
