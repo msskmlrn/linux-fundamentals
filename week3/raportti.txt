@@ -111,15 +111,13 @@ The monitor data set
 grep and cut
 Uudessa datasetissä ei ole päivän 2011.10.11. tietoja, joten käytän tilapäisesti päivää 2012.10.11.
 
-mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat collect-unique-PROCESSOR_ZONE-temps.sh
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat collect-unique-PROCESSOR_ZONE-temps.sh 
 #!/bin/bash
 
-#for file in `find . | grep "2011.10.11.*hp-temps\.txt$"`
-for file in `find . | grep "2012.10.11.*hp-temps\.txt$"`
+for file in `find monitor/2012.10.* -name '*temps.txt'`
 do
 	grep "PROCESSOR_ZONE" $file | cut -c32-34
 done | sort | uniq
-
 
 mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ ~/Development/git/yliopisto/linux-fundamentals/week3/collect-unique-PROCESSOR_ZONE-temps.sh
 24C
@@ -172,4 +170,99 @@ Sensor,Location,Temp,Threshold
 #3,I,O_ZONE,38C,100F,68C,154F,
 #4,CPU#2,29C,84F,73C,163F,
 #5,POWER_SUPPLY_BAY,22C,71F,55C,131F,
+
+
+Too long, didn't read
+mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ find 2012.10.* -name '*temps.txt' -exec grep "PROCESSOR_ZONE" {} \; > ~/Development/git/yliopisto/linux-fundamentals/week3/months-processor-temps.txt
+
+-exec, run a command when a match is found
+{}, substitute the name for {}
+; terminate the -exec statement for find, escape it
+
+Escape to a true friend
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ touch *cannot-find-me
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ touch can-find-me
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ find . -name *me
+find: paths must precede expression: *cannot-find-me
+Usage: find [-H] [-L] [-P] [-Olevel] [-D help|tree|search|stat|rates|opt|exec] [path...] [expression]
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ find . -name '*me'
+./*cannot-find-me
+./can-find-me
+
+
+Intro to loops
+
+
+The Immelmann
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/Sunday.2011.10.30$ ls
+201110300000-hipstah.jpg  201110300800.jpg	    201110302300-hipstah.jpg
+201110300000.jpg	  201110301500-hipstah.jpg  201110302300.jpg
+201110300800-hipstah.jpg  201110301500.jpg	    hipstafy.sh
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/Sunday.2011.10.30$ cat hipstafy.sh 
+#!/bin/bash
+
+for file in *.jpg
+do
+	inputfile=${file}
+	prefix=${inputfile%.jpg}
+	outputfile=$prefix-hipstah.jpg
+	convert -sepia-tone 60% +polaroid $inputfile $outputfile
+done
+
+
+Sidestep: testing
+
+Hottest day
+mssiren@laptop-e42-3:~/Downloads/lost24$ ./collect-unique-PROCESSOR_ZONE-temps2.sh
+16C
+17C
+18C
+19C
+20C
+21C
+22C
+23C
+24C
+25C
+26C
+27C
+28C
+29C
+30C
+31C
+32C
+33C
+34C
+35C
+36C
+37C
+38C
+
+mssiren@laptop-e42-3:~/Downloads/lost24$ ./hottest-day2.sh
+38C
+monitor/2012.10.02/14:45/hp-temps.txt
+
+
+mssiren@laptop-e42-3:~/Downloads/lost24$ cat hottest-day.sh 
+#!/bin/bash
+
+max_value=0
+max_value_file="null"
+
+for file in `find monitor/2012.10.* -name '*temps.txt'`
+do
+	current=$(grep "PROCESSOR_ZONE" $file | cut -c32-33)
+	if [ $max_value -lt $current ]; then
+		max_value=$current
+		max_value_file=$file
+	fi
+done
+
+echo ${max_value}C
+echo ${max_value_file}
+
+
 
