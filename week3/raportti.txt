@@ -39,10 +39,10 @@ Käytän myös ukon nodea 192 ja /tmp directorya (tmpfs)
 
 
 Fetch and extract
-mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ curl 'https://wiki.helsinki.fi/download/attachments/94589432/lost24-monitor-temps-and-fans.tar.bz2?version=1&modificationDate=1352366321231&api=v2' | tar xj
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ curl 'http://wiki.helsinki.fi/download/attachments/124126879/lost24-monitor-temps-and-fans-v2.tar.bz2?version=1&modificationDate=1383226184357&api=v2' | tar xj
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
-100 1871k  100 1871k    0     0   4837      0  0:06:36  0:06:36 --:--:--  6891
+100 2337k  100 2337k    0     0   2699      0  0:14:46  0:14:46 --:--:--  1706
 
 
 No more disk space 
@@ -92,42 +92,44 @@ Kotikoneella operaatio on nopeampi, sillä puretun paketin tietoja ei tarvitse s
 
 mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat distributed-decompress.sh
 #!/bin/bash
-time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && bzcat lost24-monitor-temps-and-fans.tar.bz2" | tar x
-
-
-mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat ukko-download-decompress.sh
-#!/bin/bash
-time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && curl 'https://wiki.helsinki.fi/download/attachments/94589432/lost24-monitor-temps-and-fans.tar.bz2?version=1&modificationDate=1352366321231&api=v2' \ | bzcat" | tar x
+time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && bzcat lost24-monitor-temps-and-fans-v2.tar.bz2" | tar x
 
 
 mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat local-download-decompress.sh
 #!/bin/bash
-time tar xjf lost24-monitor-temps-and-fans.tar.bz2 
+time tar xjf lost24-monitor-temps-and-fans-v2.tar.bz2
 
 
-mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat ukko-download-decompress.sh 
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat ukko-download-decompress.sh
 #!/bin/bash
+time ssh -l mssiren ukko192.hpc.cs.helsinki.fi \ "cd /tmp/ && curl 'http://wiki.helsinki.fi/download/attachments/124126879/lost24-monitor-temps-and-fans-v2.tar.bz2?version=1&modificationDate=1383226184357&api=v2' \ | bzcat" | tar x
 
 
 The monitor data set
 
 
 grep and cut
-mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat collect-unique-PROCESSOR_ZONE-temps.sh 
+Uudessa datasetissä ei ole päivän 2011.10.11. tietoja, joten käytän tilapäisesti päivää 2012.10.11.
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3$ cat collect-unique-PROCESSOR_ZONE-temps.sh
 #!/bin/bash
 
-for file in `find . | grep "2011.10.11.*hp-temps\.txt$"`
+#for file in `find . | grep "2011.10.11.*hp-temps\.txt$"`
+for file in `find . | grep "2012.10.11.*hp-temps\.txt$"`
 do
 	grep "PROCESSOR_ZONE" $file | cut -c32-34
 done | sort | uniq
 
-mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ ~/Development/git/yliopisto/linux-fundamentals/week3/collect-unique-PROCESSOR_ZONE-temps.sh 
-20C
-21C
-22C
-23C
+
+mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ ~/Development/git/yliopisto/linux-fundamentals/week3/collect-unique-PROCESSOR_ZONE-temps.sh
 24C
 25C
 26C
 27C
 28C
+29C
+30C
+31C
+32C
+
+
