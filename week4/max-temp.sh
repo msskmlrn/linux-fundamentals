@@ -20,5 +20,4 @@ do
 		fi
 	done
 done
-echo ${max_value}C
-echo ${max_value_file}
+echo ${max_value_file} ${max_value}°C
