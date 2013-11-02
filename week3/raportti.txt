@@ -179,6 +179,7 @@ mssiren@laptop-e42-3:~/Downloads/lost24/monitor$ find 2012.10.* -name '*temps.tx
 {}, substitute the name for {}
 ; terminate the -exec statement for find, escape it
 
+
 Escape to a true friend
 mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ touch *cannot-find-me
 mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week3/escaping$ touch can-find-me
@@ -241,20 +242,25 @@ mssiren@laptop-e42-3:~/Downloads/lost24$ ./collect-unique-PROCESSOR_ZONE-temps2.
 37C
 38C
 
-mssiren@laptop-e42-3:~/Downloads/lost24$ ./hottest-day2.sh
+
+miika@miika-desktop:~/Downloads/lost24$ ./hottest-day.sh 
 38C
 monitor/2012.10.02/14:45/hp-temps.txt
 
-
-mssiren@laptop-e42-3:~/Downloads/lost24$ cat hottest-day.sh 
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week3$ cat hottest-day.sh
 #!/bin/bash
 
 max_value=0
 max_value_file="null"
 
-for file in `find monitor/2012.10.* -name '*temps.txt'`
+for file in $(find monitor/2012.10.* -name '*temps.txt')
 do
-	current=$(grep "PROCESSOR_ZONE" $file | cut -c32-33)
+	#get the line with PROCESSOR_ZONE information
+	#then replace all spaces and backslashes with commas
+	#then get the processor temperature
+	#then remove the C
+
+	current=$(grep "PROCESSOR_ZONE" $file | sed -e 's: \+:,:g' -e 's:/:,:g' | cut -d ',' -f3 | sed -e 's:C::')
 	if [ $max_value -lt $current ]; then
 		max_value=$current
 		max_value_file=$file

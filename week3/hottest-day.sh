@@ -3,9 +3,14 @@
 max_value=0
 max_value_file="null"
 
-for file in `find monitor/2012.10.* -name '*temps.txt'`
+for file in $(find monitor/2012.10.* -name '*temps.txt')
 do
-	current=$(grep "PROCESSOR_ZONE" $file | cut -c32-33)
+	#get the line with PROCESSOR_ZONE information
+	#then replace all spaces and backslashes with commas
+	#then get the processor temperature
+	#then remove the C
+
+	current=$(grep "PROCESSOR_ZONE" $file | sed -e 's: \+:,:g' -e 's:/:,:g' | cut -d ',' -f3 | sed -e 's:C::')
 	if [ $max_value -lt $current ]; then
 		max_value=$current
 		max_value_file=$file
