@@ -117,4 +117,71 @@ miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./dail
 2011.10.29 15:05	27
 
 
+Fast draws with GnuPlot
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ gnuplot hptemps-daily-maximums.p
 
+
+Winter is Coming
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./min-temp.sh ~/Downloads/lost24/monitor/2012.10.11 | ./in-tsv-format.sh 
+2012.10.11 23:55	24
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ cat min-temp.sh 
+#!/bin/bash
+
+min_value=1000
+min_value_file="null"
+
+for folder in $*
+do
+	for file in $(find $folder -name '*temps.txt')
+	do
+
+	#get the line with PROCESSOR_ZONE information
+	#then replace all spaces and backslashes with commas
+	#then get the processor temperature
+	#then remove the C
+
+		current=$(grep "PROCESSOR_ZONE" $file | sed -e 's: \+:,:g' -e 's:/:,:g' | cut -d ',' -f3 | sed -e 's:C::')
+		if [ $current -lt $min_value ]; then
+			min_value=$current
+			min_value_file=$file
+		fi
+	done
+done
+echo ${min_value_file} ${min_value}°C
+
+
+I didn't see that one coming
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ gnuplot hptemps-daily-minimums-maximums.p
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ cat hptemps-daily-minimums-maximums.p 
+# Example: http://gnuplot.sourceforge.net/demo/timedat.html
+# {/Symbol \260} is the degree symbol
+set ylabel 'Temperature ({/Symbol \260}C)'
+set xlabel "Time (dd.mm)"
+set timefmt "%Y.%m.%d %H:%M"
+set format x "%d.%m."
+set xdata time
+set key left
+set terminal postscript eps colour enhanced
+set output "min-max-daily-temps.eps"
+set title "Daily minimum and maximum temperatures of processor zone on host lost24"
+plot "min-daily-temps.tsv" using 1:3 title 'CPU #1 Min' with linespoints, "max-daily-temps.tsv" using 1:3 title 'CPU #1 Max' with linespoints
+
+
+Onwards to getopts and switch
+
+
+
+And that's a wrap
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./find-max-or-min.sh -c -p ~/Downloads/lost24/monitor
+/home/miika/Downloads/lost24/monitor/2012.02.02/04:20/hp-temps.txt 7°C
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./find-max-or-min.sh -t -c -p ~/Downloads/lost24/monitor/2012.11.10/
+2012.11.10 01:20	22
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./find-max-or-min.sh -c -p ~/Downloads/lost24/monitor/2012.11.10/
+/home/miika/Downloads/lost24/monitor/2012.11.10/01:20/hp-temps.txt 22°C
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week4$ ./find-max-or-min.sh -t -w -p ~/Downloads/lost24/monitor/
+2012.04.25 10:50	54
