@@ -1,0 +1,41 @@
+Before you begin
+
+
+Counting in your head
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week5$ ./average.sh 1 0 0
+.33
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week5$ ./average.sh 1 2 3
+2.00
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week5$ cat average.sh
+#!/bin/bash
+
+summ=0
+params=0
+
+for var in "$@"
+do
+	summ=$((summ + var))
+	((params++))
+done
+
+echo "scale=2; $summ / $params" | bc
+
+
+mssiren@laptop-e42-3:~/Development/git/yliopisto/linux-fundamentals/week5$ cat average2.sh
+#!/bin/bash
+
+summ=0
+
+for var in "$@"
+do
+	summ=$((summ + var))
+done
+
+echo "scale=2; $summ / $#" | bc
+
+
+
+Gone in 60 Seconds (aka lost24-monitor-recap-megafun)
+
