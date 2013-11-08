@@ -98,5 +98,56 @@ while read yymmdd hhmm _ _ temperature _ _; do
 done
 
 
+Hipstafy-dropbox
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week5$ ./hipstafy-wait.sh
+Setting up watches.
+Watches established.
+DEBUG: /home/miika/Desktop/hipstafy-dropbox/ CLOSE_WRITE,CLOSE 201110300000.jpg
+DEBUG: hipstafying /home/miika/Desktop/hipstafy-dropbox/201110300000.jpg
 
+DEBUG: all done.
+
+miika@miika-desktop:~/Desktop/hipstafy-dropbox$ ls && cd hipstafied/ && ls
+201110300000.jpg  hipstafied
+201110300000-hipstah.jpg
+
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week5$ cat hipstafy-wait.sh
+#!/bin/bash
+
+watchdir=~/Desktop/hipstafy-dropbox/
+outdir=~/Desktop/hipstafy-dropbox/hipstafied/
+
+# monitor for freshly written OR moved files
+inotifywait -m -e close_write,moved_to $watchdir | while read dir event file; do
+        echo DEBUG: $dir $event $file
+
+        in="$dir$file"
+
+        echo DEBUG: hipstafying "$in"
+        
+        echo "$(./hipstafy.sh $in)"       
+
+        echo "DEBUG: all done."
+done
+
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week5$ cat hipstafy.sh
+#!/bin/bash
+
+outdir=~/Desktop/hipstafy-dropbox/hipstafied/
+
+for file in "$1" 
+do
+	if [[ "$file" == *.jpg ]]
+	then
+		inputfile=${file}
+	
+		basename="$(basename "$inputfile" .jpg)"
+		inbase="$(basename "$inputfile")"
+		outbase=$basename-hipstah.jpg
+	
+		convert -sepia-tone 60% +polaroid $inputfile $outdir$outbase
+	fi
+done
 
