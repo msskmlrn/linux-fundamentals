@@ -38,4 +38,65 @@ echo "scale=2; $summ / $#" | bc
 
 
 Gone in 60 Seconds (aka lost24-monitor-recap-megafun)
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week5$ ./minmax-megahot.sh ~/Downloads/lost24/
+NEW MAX: 2012.12.1715:05 25
+NEW MIN: 2012.12.1715:05 25
+NEW MAX: 2012.12.1703:35 26
+NEW MIN: 2012.12.1722:55 24
+NEW MIN: 2012.12.1719:15 23
+NEW MAX: 2012.12.1701:25 27
+NEW MIN: 2012.12.1720:00 22
+NEW MAX: 2012.10.0815:05 32
+NEW MAX: 2012.10.0813:25 33
+NEW MIN: 2012.11.3003:35 17
+NEW MIN: 2012.11.3006:55 15
+NEW MIN: 2011.11.2006:55 14
+NEW MIN: 2011.11.2022:55 12
+NEW MIN: 2011.11.2022:20 11
+NEW MAX: 2012.06.0515:05 36
+NEW MAX: 2012.06.0510:30 38
+NEW MAX: 2012.08.2001:10 39
+NEW MAX: 2012.08.0515:05 43
+NEW MAX: 2012.08.0510:30 44
+NEW MAX: 2012.03.1309:45 45
+NEW MAX: 2012.04.2515:05 47
+NEW MAX: 2012.04.2515:00 48
+NEW MAX: 2012.04.2510:00 52
+NEW MAX: 2012.04.2510:30 53
+NEW MAX: 2012.04.2510:50 54
+NEW MIN: 2012.02.0203:35 9
+NEW MIN: 2012.02.0205:15 8
+NEW MIN: 2012.02.0204:20 7
+
+real	0m4.009s
+user	0m6.086s
+sys	0m3.229s
+
+
+miika@miika-desktop:~/Development/git/yliopisto/linux-fundamentals/week5$ cat minmax-megahot.sh
+#!/bin/bash
+
+max=-1000
+min=1000
+
+#replace empty spaces and slashes with tabs
+#grep the rest of the line starting from the timestamp yyyy.mm.dd
+#replace the C from the temperatures with nothing
+
+time find $1 -name hp-temps.txt -exec grep "PROCESSOR_ZONE" {} + | sed 's|[ /]\+|\t|g' | grep -o "[0-9]\{4\}\.[0-9]\{2\}\.[0-9]\{2\}.*" | sed 's|\C||g' |
+
+while read yymmdd hhmm _ _ temperature _ _; do
+	if [[ "$max" -lt "$temperature" ]]; then
+			max="$temperature"
+			echo "NEW MAX:" "$yymmdd""$hhmm" "$max"
+	fi
+	
+	if [[ "$temperature" -lt "$min" ]]; then
+			min="$temperature"
+			echo "NEW MIN:" "$yymmdd""$hhmm" "$min"
+	fi
+done
+
+
+
 
